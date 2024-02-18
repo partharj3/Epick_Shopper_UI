@@ -1,34 +1,24 @@
-import axios from 'axios'
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import axios from "axios";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
-
   let navigate = useNavigate();
-  const URL = "http://localhost:8080/api/v1/logout"
+  const URL = "http://localhost:8080/api/v1/logout";
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     try {
       console.log("log out");
-      const response = await axios.post(URL,null, {
-        headers: {
-          'Content-Type': 'application/json',
-          // Pass cookies in the request headers
-        }
-      });
+      const response = await axios.post(URL);
       console.log(response);
       console.log("Logged OUT");
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.rootcause);
     }
-  }
+  };
 
-  return (
-    <div className='mt-20 m-auto bg-slate-200 p-20'>
-      <button onClick={handleLogout} className='mt-20  bg-green-500 p-3 rounded-1xl'>Log out</button>
-    </div>
-  )
-}
+  return handleLogout;
+};
 
-export default Logout
+export default Logout;
