@@ -72,6 +72,7 @@ const Login = () => {
           <form>
             <div className="mb-4">
               <input
+                id="email"
                 type="email"
                 placeholder="email address"
                 onChange={(event) => setEmail(event.target.value)}
@@ -80,6 +81,7 @@ const Login = () => {
             </div>
             <div className="mb-4">
               <input
+                id="password"
                 type="password"
                 placeholder="password"
                 onChange={(event) => setPassword(event.target.value)}

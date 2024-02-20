@@ -5,17 +5,16 @@ import { useEffect } from "react";
 import Logout from "../Private/Common/Logout";
 import { useAuth } from "../Context/AuthProvider";
 
-const Header = ({ name, isAuth }) => {
-  const handleLogout = Logout();
+const Header = () => {
+  const { handleLogout } = Logout();
 
   const [logout, setLogout] = useState(false);
 
   const { auth, setAuth } = useAuth();
 
-  const doLogOut = () => {
+  const doLogOut = async () => {
     if (localStorage.getItem("user")) {
-      localStorage.removeItem("user");
-      handleLogout();
+      await handleLogout();
       setLogout(true);
       setAuth({
         userId: "",
@@ -25,8 +24,8 @@ const Header = ({ name, isAuth }) => {
         accessExpiration: "",
         refreshExpiration: "",
       });
+      localStorage.removeItem("user");
       console.log("Logged out --. from Header Component");
-      Header();
     }
   };
 
@@ -60,7 +59,6 @@ const Header = ({ name, isAuth }) => {
       <div className="flex justify-center items-center space-x-5 px-20">
         {/* Login */}
         <div className="hover:bg-slate-900 py-2 px-3 rounded-xl hover:text-white">
-          {console.log(name)}
           <Link to="/login" className="flex justify-center items-center">
             <img
               className="h-5 w-7 pr-2"
@@ -92,7 +90,7 @@ const Header = ({ name, isAuth }) => {
               className="h-5 w-7"
               src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/header_cart-eed150.svg"
               alt=""
-            />{" "}
+            />
             Cart
           </Link>
         </div>

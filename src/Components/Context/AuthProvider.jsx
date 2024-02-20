@@ -4,7 +4,8 @@ import DoLoginRefresh from "../Auth/DoLoginRefresh";
 const authContext = createContext({});
 
 const AuthProvider = ({ child }) => {
-  const validateAndRefresh = DoLoginRefresh();
+  let refreshRequired = false;
+  const { validateAndRefresh } = DoLoginRefresh();
   const [auth, setAuth] = useState({
     userId: "",
     username: "",
@@ -14,54 +15,55 @@ const AuthProvider = ({ child }) => {
     refreshExpiration: "",
   });
 
-  const callAfterSeconds = () => {
-    let currentTime = Date.now();
-    let expiringAt = new Date(auth.accessExpiration).getTime();
-    const callAfter = expiringAt - currentTime;
-    return callAfter;
-  };
-
   const refreshLogin = async () => {
-    try {
-      const data = await validateAndRefresh();
-      if (data !== undefined) {
-        const user = {
-          userId: data.userId,
-          username: data.username,
-          role: data.role,
-          isAuthenticated: data.isAuthenticated,
-          accessExpiration: data.accessExpiration,
-          refreshExpiration: data.refreshExpiration,
-        };
-        setAuth(user);
-      } else {
-        console.log("No records Found");
-      }
-    } catch (error) {
-      console.error(
-        "Error while refreshing access token: ",
-        error.response.data.rootcause
-      );
+    const user = await validateAndRefresh();
+    console.log("user" + user);
+    if (user) {
+      setAuth({
+        userId: user.userId,
+        username: user.username,
+        role: user.role,
+        isAuthenticated: user.isAuthenticated,
+        accessExpiration: user.accessExpiration,
+        refreshExpiration: user.refreshExpiration,
+      });
     }
   };
 
-  // useEffect(() => {
-  //   refreshLogin();
-  // }, []);
+  // const callAfterSeconds = () => {
+  //   let currentTime = Date.now();
+  //   let expiringAt = new Date(auth.accessExpiration).getTime();
+  //   const callAfter = expiringAt - currentTime;
+  //   console.log(callAfter);
+  //   return callAfter;
+  // };
 
   // useEffect(() => {
-  //   if (callAfterSeconds !== 0) {
+  //   // refreshLogin();
+  //   // (()=> {call})
+  //   const callAfter = callAfterSeconds();
+
+  //   // Setup interval only if callAfter is not 0 and auth.accessExpiration is defined
+  //   if (callAfter > 0 && auth.accessExpiration) {
   //     const refreshInterval = setInterval(() => {
   //       console.log("Refreshing access token");
-  //       // refreshLogin();
-  //     }, callAfterSeconds());
-  //     return () => clearInterval(refreshInterval);
+  //       refreshLogin();
+  //     }, callAfter);
+
+  //     // Cleanup interval on component unmount or when accessExpiration changes
+  //     return () => {
+  //       console.log("Cleaning up");
+  //       clearInterval(refreshInterval);
+  //     };
   //   }
   // }, [auth.accessExpiration]);
 
   useEffect(() => {
-    console.log("Auth:", auth);
-  }, [auth]);
+    if (!refreshRequired) {
+      refreshRequired = true;
+      refreshLogin();
+    }
+  }, []);
 
   return (
     <authContext.Provider value={{ auth, setAuth }}>
@@ -73,3 +75,5 @@ const AuthProvider = ({ child }) => {
 export default AuthProvider;
 
 export const useAuth = () => useContext(authContext);
+
+/************************** */

@@ -57,7 +57,7 @@ const DoLoginRefresh = () => {
     }
   };
 
-  return validateAndRefresh;
+  return { validateAndRefresh };
 };
 
 export default DoLoginRefresh;

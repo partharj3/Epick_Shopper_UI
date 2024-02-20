@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import Header from "./Components/util/Header.jsx";
 import { Outlet } from "react-router-dom";
 
-const App = ({ name, isAuth }) => {
+const App = () => {
   return (
     <div>
-      <Header name={name} isAuth={isAuth} />
+      <Header />
       <Outlet />
     </div>
   );
