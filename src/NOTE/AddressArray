@@ -1,0 +1,87 @@
+const findAddressByStore = async () => {
+    const URL = `http://localhost:8080/api/v1/stores/${storeId}/addresses`;
+    try {
+      console.log("---- FETCH------");
+      const response = await axios.get(URL);
+      console.log(response);
+      console.log("fetching");
+      let array = [];
+      if (response.status === 200) {
+        const addresses = response.data.data; // Assuming this is an array of addresses
+        console.log(addresses);
+        const addressArray = {
+          addressId: addresses.addressId,
+          streetAddress: addresses.streetAddress,
+          streetAddressAdditional: addresses.streetAddressAdditional,
+          city: addresses.city,
+          state: addresses.state,
+          country: addresses.country,
+          pincode: addresses.pincode,
+          addressType: addresses.addressType,
+          contacts: addresses.contacts,
+        };
+        array.push(addressArray);
+        setAddressList(array); // Set the state with the array of addresses
+        console.log("Addresses Fetched");
+        console.log(addressArray); // Ensure addresses are added to the list
+        console.log(addressArray.contacts);
+      }
+    } catch (error) {
+      console.log(error);
+      console.log(error.response.data.message);
+    }
+};
+  
+<div className="">
+            {console.log("Address " + addressList)}
+            {(addressList.length === 0 && (
+              <Link to={`/seller-dashboard/store/${storeId}/addresses`}>
+                <div className="bg-gray-700 m-3 w-24 p-1.5 text-center rounded-full">
+                  <button>add addresses</button>
+                </div>
+              </Link>
+            )) || (
+              <div className="text-black flex gap-3 pt-10">
+                <h2 className="text-lg font-semibold">Address:</h2>
+                {addressList.map((addresses, index) => (
+                  <div key={index} className="flex flex-col gap-3">
+                    <div className="flex gap-2 items-center">
+                      <span className="text-sm"> Address Type:</span>
+                      <span className="font-bold">{addresses.addressType}</span>
+                    </div>
+
+                    <div className="flex gap-2 items-center">
+                      <span className="text-sm"> id:</span>
+                      <span className="font-bold">{addresses.addressId}</span>
+                    </div>
+
+                    <div className="flex gap-2 items-center">
+                      <span className="text-sm">Area:</span>
+                      <span className="font-bold">
+                        {addresses.streetAddress}
+                        {", "}
+                        {addresses.streetAddressAdditional}
+                      </span>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <span className="text-sm">City:</span>
+                      <span className="font-bold">{addresses.city}</span>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <span className="text-sm">State:</span>
+                      <span className="font-bold"> {addresses.state}</span>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <span className="text-sm">Country:</span>
+                      <span className="font-bold">{addresses.country}</span>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <span className="text-sm">Pincode:</span>
+                      <span className="font-bold">{addresses.pincode}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>

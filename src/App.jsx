@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Header from "./Components/util/Header.jsx";
 import { Outlet } from "react-router-dom";
 
 const App = () => {
   return (
-    <div>
+    <div className="block z-50">
       <Header />
       <Outlet />
     </div>
